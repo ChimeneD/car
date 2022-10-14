@@ -8,7 +8,12 @@ const ControllerScreen = () => {
   return (
     <View>
       <Text>ControllerScreen</Text>
-      <Button onPress={()=>sendData("1")}>Send Data</Button>
+      <Button onPress={()=>sendData("F")}>Forward</Button>
+      <Button onPress={()=>sendData("B")}>Backward</Button>
+      <Button onPress={()=>sendData("L")}>Left</Button>
+      <Button onPress={()=>sendData("R")}>Right</Button>
+      <Button onPress={()=>sendData("A")}>Switch to Automatic</Button>
+      <Button onPress={()=>sendData("M")}>Switch to Manual</Button>
     </View>
   );
 };
