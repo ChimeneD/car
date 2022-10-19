@@ -5,6 +5,7 @@ import useBLE from "../hooks/useBLE"
 
 const ControllerScreen = () => {
   const { sendData } = useBLE()
+  const coordinates = `{"lng":31.12323123,"lat":18.21321232}`;
   return (
     <View>
       <Text>ControllerScreen</Text>
@@ -14,6 +15,7 @@ const ControllerScreen = () => {
       <Button onPress={()=>sendData("R")}>Right</Button>
       <Button onPress={()=>sendData("A")}>Switch to Automatic</Button>
       <Button onPress={()=>sendData("M")}>Switch to Manual</Button>
+      <Button onPress={()=>sendData(coordinates)}>Send Coordinates</Button>
     </View>
   );
 };

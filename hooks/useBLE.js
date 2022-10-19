@@ -94,7 +94,7 @@ export default useBLE = () => {
       if (error) {
         console.log(error);
       }
-      if (device && device.name?.includes('CAR')) {
+      if (device && device.name?.includes('car')) {
         // add device
         setAllDevices(prevState => {
           if (!isDuplicateDevice(prevState, device)) {
@@ -131,8 +131,8 @@ export default useBLE = () => {
             bleManager
               .writeCharacteristicWithResponseForDevice(
                 device.id,
-                '0000101d-0000-1000-8000-00805f9b34fb',
-                '000001ab-0000-1000-8000-00805f9b34fb',
+                '0000101e-0000-1000-8000-00805f9b34fb',
+                '0000ab01-0000-1000-8000-00805f9b34fb',
                 `${base64}`,
               )
               .then(characteristic => {
@@ -157,8 +157,8 @@ export default useBLE = () => {
             bleManager
               .writeCharacteristicWithoutResponseForDevice(
                 device.id,
-                '0000101d-0000-1000-8000-00805f9b34fb',
-                '000001ab-0000-1000-8000-00805f9b34fb',
+                '0000101e-0000-1000-8000-00805f9b34fb',
+                '0000ab01-0000-1000-8000-00805f9b34fb',
                 `${base64}`,
               )
               .then(characteristic => {
