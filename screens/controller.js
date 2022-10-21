@@ -13,6 +13,7 @@ const ControllerScreen = () => {
       <Button onPress={()=>sendData("B")}>Backward</Button>
       <Button onPress={()=>sendData("L")}>Left</Button>
       <Button onPress={()=>sendData("R")}>Right</Button>
+      <Button onPress={()=>sendData("S")}>Stop</Button>
       <Button onPress={()=>sendData("A")}>Switch to Automatic</Button>
       <Button onPress={()=>sendData("M")}>Switch to Manual</Button>
       <Button onPress={()=>sendData(coordinates)}>Send Coordinates</Button>

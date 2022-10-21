@@ -94,7 +94,7 @@ export default useBLE = () => {
       if (error) {
         console.log(error);
       }
-      if (device && device.name?.includes('car')) {
+      if (device && device.name?.includes('gps')) {
         // add device
         setAllDevices(prevState => {
           if (!isDuplicateDevice(prevState, device)) {
@@ -153,16 +153,17 @@ export default useBLE = () => {
         return bleManager
           .discoverAllServicesAndCharacteristicsForDevice(connectedDevice.id)
           .then(device => {
-            console.log(device.id);
+            console.log("Device ID => ", device.id);
+            console.log("Message => ", message);
             bleManager
               .writeCharacteristicWithoutResponseForDevice(
                 device.id,
                 '0000101e-0000-1000-8000-00805f9b34fb',
                 '0000ab01-0000-1000-8000-00805f9b34fb',
-                `${base64}`,
+                base64,
               )
               .then(characteristic => {
-                console.log(characteristic.value);
+                console.log("Characteristics => ", characteristic.value);
                 return;
               })
               .catch(error => {
