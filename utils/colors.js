@@ -1,9 +1,9 @@
 export const colors = {
   primary: '#FAE161',
-  secondary: '',
-  tertiary: '#316B83',
+  secondary: '#E7FF52', // lime green
+  tertiary: '#252525',
   accent: '#ADADAD',
   light: '#D5ECC2',
   dark: '#98DDCA',
-  background: '#FFFFFC',
+  background: '#F9F9F9',
 };
