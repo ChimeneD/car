@@ -1,8 +1,9 @@
 import React from 'react';
 import {Platform, PermissionsAndroid} from 'react-native';
 import {BleManager} from 'react-native-ble-plx';
-import {btoa} from 'react-native-quick-base64';
+import {btoa, atob} from 'react-native-quick-base64';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ContextAPI } from '../utils/context';
 
 const bleManager = new BleManager();
 
@@ -10,6 +11,7 @@ export default useBLE = () => {
   const [allDevices, setAllDevices] = React.useState([]);
   const [isConnected, setIsConnected] = React.useState(false);
   const [connectedDevice, setConnectedDevice] = React.useState(null);
+  const [btResponse, setBTResponse] = React.useState(null);
 
   React.useEffect(() => {
     (async () => {
@@ -66,6 +68,8 @@ export default useBLE = () => {
       setIsConnected(true);
       saveDevice(deviceConnection);
       bleManager.stopDeviceScan();
+      await deviceConnection.discoverAllServicesAndCharacteristics();
+      startStreamingData(device);
       return true;
     } catch (e) {
       console.log('ERROR WHEN CONNECTING ', e);
@@ -94,7 +98,7 @@ export default useBLE = () => {
       if (error) {
         console.log(error);
       }
-      if (device && device.name?.includes('gps')) {
+      if (device && device.name?.includes('GPS')) {
         // add device
         setAllDevices(prevState => {
           if (!isDuplicateDevice(prevState, device)) {
@@ -108,10 +112,26 @@ export default useBLE = () => {
   // start streaming data
   const startStreamingData = async device => {
     if (device) {
-      device.monitorCharacteristicForService('', '', () => {});
+      device.monitorCharacteristicForService(
+        'FFE0',
+        'FFE1',
+        onBluetoothDataUpdate,
+      );
     } else {
       console.error('NO DEVICE CONNECTED');
     }
+  };
+  const onBluetoothDataUpdate = (error, characteristic) => {
+    if (error) {
+      console.log(error);
+      return;
+    } else if (!characteristic?.value) {
+      console.error('No Characteristic value');
+      return;
+    }
+    const rawData = atob(characteristic.value);
+    console.log(rawData);
+    setBTResponse(rawData);
   };
   const sendData = async message => {
     try {
@@ -131,8 +151,10 @@ export default useBLE = () => {
             bleManager
               .writeCharacteristicWithResponseForDevice(
                 device.id,
-                '0000101e-0000-1000-8000-00805f9b34fb',
-                '0000ab01-0000-1000-8000-00805f9b34fb',
+                'FFE0',
+                'FFE1',
+                // '0000101d-0000-1000-8000-00805f9b34fb',
+                // '000001ab-0000-1000-8000-00805f9b34fb',
                 `${base64}`,
               )
               .then(characteristic => {
@@ -153,17 +175,19 @@ export default useBLE = () => {
         return bleManager
           .discoverAllServicesAndCharacteristicsForDevice(connectedDevice.id)
           .then(device => {
-            console.log("Device ID => ", device.id);
-            console.log("Message => ", message);
+            console.log('Device ID => ', device.id);
+            console.log('Message => ', message);
             bleManager
-              .writeCharacteristicWithoutResponseForDevice(
+              .writeCharacteristicWithResponseForDevice(
                 device.id,
-                '0000101e-0000-1000-8000-00805f9b34fb',
-                '0000ab01-0000-1000-8000-00805f9b34fb',
+                // '0000101d-0000-1000-8000-00805f9b34fb',
+                // '000001ab-0000-1000-8000-00805f9b34fb',
+                'FFE0',
+                'FFE1',
                 base64,
               )
               .then(characteristic => {
-                console.log("Characteristics => ", characteristic.value);
+                console.log('Characteristics => ', characteristic.value);
                 return;
               })
               .catch(error => {
@@ -188,6 +212,7 @@ export default useBLE = () => {
   };
   return {
     allDevices,
+    btResponse,
     connectToDevice,
     connectedDevice,
     isConnected,
@@ -195,5 +220,6 @@ export default useBLE = () => {
     sendData,
     scanForDevices,
     scanAndConnect,
+    startStreamingData,
   };
 };

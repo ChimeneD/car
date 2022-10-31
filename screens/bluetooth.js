@@ -1,6 +1,12 @@
 import * as React from 'react';
 import useBLE from '../hooks/useBLE';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
 import {Button} from 'react-native-paper';
 import {colors} from '../utils/colors';
 
@@ -24,23 +30,27 @@ export default BlueToothScreen = ({navigation}) => {
   };
   return (
     <View style={styles.container}>
-      <Text>Please Connect to the Car</Text>
+      <Text style={styles.text}>Please Connect to the Car</Text>
       {allDevices.map(device => {
         return (
           <TouchableOpacity key={device.id} onPress={() => connect(device)}>
-            <Button mode="contained">Connect to `{device.name}`</Button>
+            <Button mode="contained" style={styles.btn} color={secondary}>
+              Connect to `{device.name}`
+            </Button>
           </TouchableOpacity>
         );
       })}
 
       <TouchableOpacity onPress={openModal}>
-        <Button>Scan For Devices</Button>
+        <Button style={styles.btn_out} color={secondary}>
+          Scan For Devices
+        </Button>
       </TouchableOpacity>
     </View>
   );
 };
 
-const {background} = colors;
+const {background, secondary, tertiary} = colors;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -48,4 +58,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: background,
   },
+   btn: {
+    width: Dimensions.get('window').width - 80,
+    marginTop: 5,
+    marginBottom: 10,
+  },
+  btn_out: {
+    backgroundColor: '#252525',
+    width: Dimensions.get('window').width - 80,
+  },
+  text: {
+    fontSize: 20,
+    marginBottom: 15
+  }
 });

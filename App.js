@@ -4,9 +4,13 @@ import {Provider as PaperProvider} from 'react-native-paper';
 import {ContextAPI} from './utils/context';
 
 const App = () => {
+  const [bluetoothData, setBluetoothData] = React.useState(null);
+  const updataBTData = (data) => {
+    setBluetoothData(data);
+  }
   return (
     <PaperProvider>
-      <ContextAPI.Provider value={{mode: 0}}>
+      <ContextAPI.Provider value={{bluetoothData: bluetoothData, updataBTData: updataBTData}}>
         <Navigation />
       </ContextAPI.Provider>
     </PaperProvider>
